@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html ng-app="myStore">
+
+<head>
+    <title>Gem Store App</title>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="gem.css" />
+
+    <!--Angular-->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <script type="text/javascript" src="static/controllers/reviews.js"></script>
+    <script type="text/javascript" src="static/App.js"></script>
+    <script type="text/javascript" src="static/controllers/myPanelController.js"></script>
+    <script type="text/javascript" src="static/controllers/myStoreController.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body>
+
+{%if request.user.is_authenticated %}
+    <h3>
+        Welcome, {% if request.user.first_name %}
+        {{ request.user.first_name }}
+        {% else %}
+        {{ request.user.username }}
+        {% endif %} <a href="{% url 'auth_logout' %}">Log Out</a>
+    </h3>
+    {% else %}
+    <h4>Hello Gem Lover! Would you like to <a href="{%url 'auth_login' %}">Login In?</a></h4>
+{% endif %}
+{% verbatim %}
+<div class="container">
+<div ng-controller="myStoreController" class="row">
+	<a ng-href="/accounts/login/"><button class="btn btn-primary">login</button></a>
+	<a ng-href="/accounts/logout/"><button class="btn btn-primary">logout</button></a>
+	<div ng-repeat="product in gems" class="col-md-4">
+		<div class="panel-heading">
+			<h1>{{product.name }}</h1>
+		</div>
+		<div class="panel-body">
+			<div>
+				<img ng-src='{{product.images}}'/>
+			</div>
+				<h2 >{{product.price | currency}}</h2>
+			{% endverbatim %}
+			{% if request.user.is_authenticated %}
+				<a href="{% url 'cart' %}" class="btn btn-success">My Cart</a>
+				{% verbatim %}
+				<a ng-show="product.canPurchase" href="{{'add/' + product.id}}" class="btn btn-success">Add to Cart</a>
+				{% endverbatim %}
+			{% endif %}
+			{% verbatim %}
+		</div>
+			<section ng-init="tab = 1" ng-controller="myPanelController">
+				<ul class="nav nav-pills">
+					<li ng-class="{ active:isSelected(1) }"><a ng-click="selectTab(1)">Description</a></li>
+					<li ng-class="{ active:isSelected(2) }"><a ng-click="selectTab(2)">Specifications</a></li>
+					<li ng-class="{ active: isSelected(3) }"><a ng-click="selectTab(3)">Reviews</a></li>
+				</ul>
+
+
+				<div class="panel" ng-show = "isSelected(1)">
+					<h4>Description</h4>
+					<blockquote>{{product.description}}</blockquote>
+				</div>
+				<div class="panel" ng-show = "isSelected(2)">
+					<h4>Specifications</h4>
+					<blockquote>Nothing yet</blockquote>
+				</div>
+				<div ng-app="storeReviews">
+					<div class="panel" ng-show="isSelected(3)" reviews ng-controller="myReviewsController">
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+</div>
+{% endverbatim %}
+</body>
+</html>

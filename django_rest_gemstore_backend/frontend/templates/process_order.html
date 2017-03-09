@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm your order</title>
+</head>
+<body>
+    <div>
+        {% for item in cart %}
+        <span>{{ item.product.name }}</span>
+        <span>{{ item.quantity }}</span>
+        Quantity: <a href="{% url 'add_to_cart' item.product.id %}">[+]</a>
+        Remove: <a href="{% url 'remove_from_cart' item.product.id %}">[-]</a>
+    </div>
+    {% empty %}
+        <div>
+            There are no items in your cart
+        </div>
+    {% endfor %}
+<div>
+    <h4>Total: $<span>{{ total }}</span></h4>
+</div>
+
+<div>
+    {% if cart %}
+    <div>
+        <a href="{% url 'complete_order' 'paypal' %}"><input type="submit" id = "btn-login" value = "purchase"></a>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+<h4>Reviews</h4>
+<blockquote ng-repeat="reviews in product.reviews">
+    <b>
+        {{reviews.stars}}
+        {{reviews.body}}
+    </b>
+    <cite>
+        {{reviews.author}}
+    </cite>
+</blockquote>
+<form name="reviewForm" ng-controller="myReviewsController as reviewCtrl" ng-submit="reviewForm.$valid && reviewCtrl.addReview(reviewCtrl.reviews)" novalidate>
+    <blockquote>
+        <b>
+            {{reviewCtrl.reviews.stars}}
+            {{reviewCtrl.reviews.body}}
+        </b>
+        <cite>
+            {{reviewCtrl.reviews.author}}
+        </cite>
+    </blockquote>
+    <fieldset>
+        <legend>Submit a review</legend>
+        <div class="form-group" ng-class="{'has-error' : reviewForm.rating.$invalid && reviewForm.rating.$dirty }">
+            <select ng-model="reviewCtrl.reviews.stars" required class="form-control">
+                <option value="" selected>Enter a Rating</option>
+                <option value="1">1 star</option>
+                <option value="2">2 star</option>
+                <option value="3">3 star</option>
+                <option value="4">4 star</option>
+                <option value="5">5 star</option>
+            </select>
+            <span class="text-danger" ng-show="reviewForm.rating.$invalid && reviewForm.rating.$dirty">Please enter a rating</span>
+        </div>
+        <div class="form-group" ng-class="{'has-error' : reviewForm.comments.$invalid && reviewForm.comments.$dirty }">
+            <label>Comments</label>
+            <textarea class="form-control" name="comments" placeholder="Enter your comments" ng-model="reviewCtrl.reviews.body" required></textarea>
+            <span class="text-danger" ng-show="reviewForm.comments.$invalid && reviewForm.comments.$dirty">Please provide some comments</span>
+        </div>
+        <div class="form-group" ng-class="{'has-error' : reviewForm.email.$invalid && reviewForm.email.$dirty }">
+            <label>Email:</label>
+            <input class="form-control" type="email" name="email" placeholder="example@gmail.com" ng-model="reviewCtrl.reviews.author" required>
+            <span class="text-danger" ng-show="reviewForm.email.$invalid && reviewForm.email.$dirty">Please provide your email</span>
+        </div>
+        <div> reviewForm is {{reviewForm.$valid}} </div>
+        <input type="submit" value="submit" class="btn">
+    </fieldset>
+</form>
